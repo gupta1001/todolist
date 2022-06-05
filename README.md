@@ -1,8 +1,9 @@
 # To Do List
 
 🔍 A node.js application that uses user input to create a to do list using core concepts of EJS.
-This project uses code refactoring (to reduce the size of code to 32 % and con) and concepts like Layouts, Module exports, Templates
-You can create to do list for personal as well as work purpose using the correponding path
+This project uses code refactoring (to reduce the size of code to 32%) and concepts like Layouts, Module exports, Templates
+
+You can create to do list for personal and work purpose using the correponding path parameter
 
 💻 Below are the screenshots showing the functionality of the application:
 

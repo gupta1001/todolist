@@ -48,6 +48,7 @@ Then this work is checked and striked through from the list
 
 Run the following command at th root of your project:
 ```bash
+  npm install
   node app.js
 ```
 

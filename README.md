@@ -13,7 +13,7 @@ You can create to do list for personal as well as work purpose using the correpo
 <img width="700" alt="Screenshot 2022-06-05 at 7 35 05 PM" src="https://user-images.githubusercontent.com/90515961/172055849-3c87ac1c-4a11-4dbb-89d2-82ef4fa1144b.png">
 
 3. about section of the application
-<img width="1512" alt="Screenshot 2022-06-05 at 7 39 16 PM" src="https://user-images.githubusercontent.com/90515961/172056231-1d85da20-2c3d-4d12-ac6b-14c03e300cb1.png">
+<img width="700" alt="Screenshot 2022-06-05 at 7 39 16 PM" src="https://user-images.githubusercontent.com/90515961/172056231-1d85da20-2c3d-4d12-ac6b-14c03e300cb1.png">
 
 
 ## User Story

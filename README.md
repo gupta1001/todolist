@@ -22,7 +22,7 @@ You can create to do list for personal as well as work purpose using the correpo
 AS A developer
 I WANT a To Do List generator
 SO THAT I can keep track of my daily items to be completed.
-I want the same to do list functionalit for my Work purpose as well 
+I want the same to do list functionality for my Work purpose as well 
 ```
 
 ## Acceptance Criteria

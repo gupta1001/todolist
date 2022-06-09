@@ -3,6 +3,7 @@
 const express = require("express");
 const https = require("https");
 const mongoose = require("mongoose");
+const _ = require("lodash");
 
 //const date = require(__dirname + "/date.js");
 
@@ -67,12 +68,12 @@ app.get("/", function(req, res) {
     });
 });
 
-app.get("/work", function (req, res) {
-    res.render("list", {
-        listTitle: "Work Items",
-        newListItems: workItems
-    });
-})
+// app.get("/work", function (req, res) {
+//     res.render("list", {
+//         listTitle: "Work Items",
+//         newListItems: workItems
+//     });
+// })
 
 app.get("/about", function (req, res) {
     res.render("about");
@@ -116,14 +117,20 @@ app.post("/delete", function (req, res) {
             }
         });
     }
-    // else{
-    //     listName.findByIdAndRemove
-    // }
+    else{
+        List.findOneAndUpdate({name: listName}, {$pull: {items: {_id: itemId}}},
+        function (err, foundList) { 
+            console.log(foundList);
+            if (!err){
+                res.redirect(`/${listName}`);                    
+            }
+        });
+    }
     
 });
 
 app.get("/:todolistName", function (req, res) {
-    const customListTitle = req.params.todolistName.toLowerCase();
+    const customListTitle = _.capitalize(req.params.todolistName);
     //console.log("custom list requested ", customListTitle);
     List.find({name: customListTitle}, function (err, foundList) { 
         if (!err){

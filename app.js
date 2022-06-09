@@ -73,15 +73,24 @@ app.get("/about", function (req, res) {
 })
 
 app.post("/", function (req, res) {
-    const item = req.body.newItem;
-    if (req.body.list === "Work"){
-        workItems.push(item)
-        res.redirect("/work")
-    }
-    else{
-        items.push(item);
-        res.redirect("/");
-    }
+    const itemName = req.body.newItem;
+    const item = new Item({
+        name: itemName
+    });
+    item.save();
+    res.redirect("/");
+});
+
+
+//deleting an item from mongo db
+app.post("/delete", function (req, res) {
+    itemId = req.body.checkbox;
+    Item.findByIdAndRemove(itemId, function(err){
+        if(!err){
+            console.log("Successfully deleted the item!");
+            res.redirect("/");
+        }
+    });
 });
 
 // app.post("/work", function (req, res) {

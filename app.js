@@ -13,6 +13,12 @@ const itemsSchema = {
     name: "String"
 }
 
+const listSchema = {
+    name: "String",
+    items: [itemsSchema]
+}
+
+const List = mongoose.model("List", listSchema);
 const Item = mongoose.model("Item", itemsSchema); 
 
 const item1 = new Item({
@@ -74,23 +80,76 @@ app.get("/about", function (req, res) {
 
 app.post("/", function (req, res) {
     const itemName = req.body.newItem;
+    const listTitle = req.body.list;
+
     const item = new Item({
         name: itemName
     });
-    item.save();
-    res.redirect("/");
+
+    if (listTitle === "Today"){
+        item.save();
+        res.redirect("/");
+    }
+    else{
+        List.find({name: listTitle}, function (err, foundList) { 
+            if (!err){
+                console.log(foundList[0].items);
+                foundList[0].items.push(item);
+                foundList[0].save();
+                res.redirect(`/${listTitle}`);
+            }
+        });
+    }
 });
 
 
 //deleting an item from mongo db
 app.post("/delete", function (req, res) {
-    itemId = req.body.checkbox;
-    Item.findByIdAndRemove(itemId, function(err){
-        if(!err){
-            console.log("Successfully deleted the item!");
-            res.redirect("/");
+    console.log(req.body);
+    const itemId = req.body.checkbox;
+    const listName = req.body.listTitle;
+    if(listName === "Today"){
+        Item.findByIdAndRemove(itemId, function(err){
+            if(!err){
+                console.log("Successfully deleted the item!");
+                res.redirect("/");
+            }
+        });
+    }
+    // else{
+    //     listName.findByIdAndRemove
+    // }
+    
+});
+
+app.get("/:todolistName", function (req, res) {
+    const customListTitle = req.params.todolistName.toLowerCase();
+    //console.log("custom list requested ", customListTitle);
+    List.find({name: customListTitle}, function (err, foundList) { 
+        if (!err){
+            if(foundList.length === 0){
+                const list = new List({
+                    name: customListTitle,
+                    items: defaultItems
+                });
+                list.save();
+                res.redirect(`/${customListTitle}`);
+            }
+            else{
+                res.render("list", {listTitle: foundList[0].name, newListItems: foundList[0].items});
+            }
         }
     });
+    
+});
+
+app.post("/:todolistName", function (req, res) {
+    const itemName = req.body.newItem;
+    const item = new Item({
+        name: itemName
+    });
+    item.save();
+    res.redirect("/");
 });
 
 // app.post("/work", function (req, res) {

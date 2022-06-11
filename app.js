@@ -9,8 +9,8 @@ require("dotenv").config();
 //const date = require(__dirname + "/date.js");
 
 //mongo db connection
-connectionString = process.env.CONNECTION_STRING;
-mongoose.connect( connectionString + "/todolistDB");
+//connectionString = process.env.CONNECTION_STRING;
+mongoose.connect("mongodb+srv://admin-prankur:mongoD16826@cluster0.vkl3v.mongodb.net/todolistDB");
 
 const itemsSchema = {
     name: "String"

@@ -8,6 +8,9 @@
   },
   "author": "Prankur Gupta",
   "license": "ISC",
+  "engines": {
+    "node": "16.14.2"
+  },
   "dependencies": {
     "dotenv": "^16.0.1",
     "ejs": "^3.1.8",

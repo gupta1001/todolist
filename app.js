@@ -4,11 +4,13 @@ const express = require("express");
 const https = require("https");
 const mongoose = require("mongoose");
 const _ = require("lodash");
+require("dotenv").config();
 
 //const date = require(__dirname + "/date.js");
 
 //mongo db connection
-mongoose.connect("mongodb://localhost:27017/todolistDB");
+connectionString = process.env.CONNECTION_STRING;
+mongoose.connect( connectionString + "/todolistDB");
 
 const itemsSchema = {
     name: "String"
@@ -61,6 +63,7 @@ app.get("/", function(req, res) {
                         console.log("Successfully added default items to DB")
                 }});
                 res.redirect("/");
+                console.log(foundItems);
             }
             else{
                 res.render("list", {listTitle: "Today", newListItems: foundItems});
@@ -89,7 +92,9 @@ app.post("/", function (req, res) {
 
     if (listTitle === "Today"){
         item.save();
-        res.redirect("/");
+        setTimeout(() => {
+            res.redirect("/");
+        }, "100");
     }
     else{
         List.find({name: listTitle}, function (err, foundList) { 
@@ -97,7 +102,10 @@ app.post("/", function (req, res) {
                 console.log(foundList[0].items);
                 foundList[0].items.push(item);
                 foundList[0].save();
-                res.redirect(`/${listTitle}`);
+                setTimeout(() => {
+                    res.redirect(`/${listTitle}`);
+                }, "100");
+
             }
         });
     }
@@ -132,22 +140,27 @@ app.post("/delete", function (req, res) {
 app.get("/:todolistName", function (req, res) {
     const customListTitle = _.capitalize(req.params.todolistName);
     //console.log("custom list requested ", customListTitle);
-    List.find({name: customListTitle}, function (err, foundList) { 
-        if (!err){
-            if(foundList.length === 0){
-                const list = new List({
-                    name: customListTitle,
-                    items: defaultItems
-                });
-                list.save();
-                res.redirect(`/${customListTitle}`);
+    console.log(customListTitle);
+    if(customListTitle === "Favicon.ico"){
+        res.redirect("/")
+    }
+    else{
+        List.find({name: customListTitle}, function (err, foundList) { 
+            if (!err){
+                if(foundList.length === 0){
+                    const list = new List({
+                        name: customListTitle,
+                        items: defaultItems
+                    });
+                    list.save();
+                    res.redirect(`/${customListTitle}`);
+                }
+                else{
+                    res.render("list", {listTitle: foundList[0].name, newListItems: foundList[0].items});
+                }
             }
-            else{
-                res.render("list", {listTitle: foundList[0].name, newListItems: foundList[0].items});
-            }
-        }
-    });
-    
+        });
+    }   
 });
 
 app.post("/:todolistName", function (req, res) {
@@ -165,6 +178,11 @@ app.post("/:todolistName", function (req, res) {
 //     res.redirect("/work");
 // });
 
-app.listen(process.env.PORT || 3000, function() {
-   console.log("app has started on port 3000"); 
+let port = process.env.PORT
+if (port == null || port == ""){
+    port = 3000;
+}
+
+app.listen(port, function() {
+   console.log("app has started on port: " +  port); 
 });

@@ -141,26 +141,26 @@ app.get("/:todolistName", function (req, res) {
     const customListTitle = _.capitalize(req.params.todolistName);
     //console.log("custom list requested ", customListTitle);
     console.log(customListTitle);
-    if(customListTitle === "Favicon.ico"){
-        res.redirect("/")
-    }
-    else{
-        List.find({name: customListTitle}, function (err, foundList) { 
-            if (!err){
-                if(foundList.length === 0){
-                    const list = new List({
-                        name: customListTitle,
-                        items: defaultItems
-                    });
-                    list.save();
-                    res.redirect(`/${customListTitle}`);
-                }
-                else{
-                    res.render("list", {listTitle: foundList[0].name, newListItems: foundList[0].items});
-                }
+    // if(customListTitle === "Favicon.ico"){
+    //     res.redirect("/")
+    // }
+    // else{
+    List.find({name: customListTitle}, function (err, foundList) { 
+        if (!err){
+            if(foundList.length === 0){
+                const list = new List({
+                    name: customListTitle,
+                    items: defaultItems
+                });
+                list.save();
+                res.redirect(`/${customListTitle}`);
             }
-        });
-    }   
+            else{
+                res.render("list", {listTitle: foundList[0].name, newListItems: foundList[0].items});
+            }
+        }
+    });
+    //}   
 });
 
 app.post("/:todolistName", function (req, res) {

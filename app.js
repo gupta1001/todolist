@@ -126,10 +126,9 @@ app.post("/delete", function (req, res) {
         });
     }
     else{
-        List.findOneAndUpdate({name: listName}, {$pull: {items: {_id: itemId}}},
-        function (err, foundList) { 
-            console.log(foundList);
+        List.findOneAndUpdate({name: listName}, {$pull: {items: {_id: itemId}}}, function (err, foundList) { 
             if (!err){
+                console.log("Successfully deleted the item!");
                 res.redirect(`/${listName}`);                    
             }
         });
@@ -140,26 +139,39 @@ app.post("/delete", function (req, res) {
 app.get("/:todolistName", function (req, res) {
     const customListTitle = _.capitalize(req.params.todolistName);
     //console.log("custom list requested ", customListTitle);
-    console.log(customListTitle);
+    // console.log(customListTitle);
     // if(customListTitle === "Favicon.ico"){
     //     res.redirect("/")
     // }
     // else{
-    List.find({name: customListTitle}, function (err, foundList) { 
+
+    List.findOne({name: customListTitle}, function (err, foundList) { 
+        //console.log(foundList + " array of the list");
         if (!err){
-            if(foundList.length === 0){
+            if(!foundList){
                 const list = new List({
                     name: customListTitle,
                     items: defaultItems
                 });
                 list.save();
-                res.redirect(`/${customListTitle}`);
+                redirectPostUpdate();
+            }
+            else if(foundList.items.length === 0){
+                foundList.items = defaultItems;
+                foundList.save();
+                redirectPostUpdate();
             }
             else{
-                res.render("list", {listTitle: foundList[0].name, newListItems: foundList[0].items});
+                res.render("list", {listTitle: foundList.name, newListItems: foundList.items});
             }
         }
     });
+
+    const redirectPostUpdate = function(){
+        setTimeout(() => {
+            res.redirect(`/${customListTitle}`);
+        }, "100");
+    }
     //}   
 });
 
